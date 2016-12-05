@@ -1,0 +1,66 @@
+SOLUTION_MASTER_SPECIES
+C        CO2            2.0     61.0173         12.0111
+E        e-             0.0     0.0             0.0
+H        H+             -1.     1.008           1.008
+H(0)     H2             0.0     1.008
+H(1)     H+             -1.     1.008
+O        H2O            0.0     16.00           16.00
+O(-2)    H2O            0.0     18.016
+O(0)     O2             0.0     16.00
+[A]        [A]          0.0     [A]           1.0
+[B]        [B]          0.0     [B]           1.0
+[C]        [C]          0.0     [C]           2.0
+[E]        [E]          0.0     [E]           1.0
+SOLUTION_SPECIES
+2H2O = O2 + 4H+ + 4e- 
+        log_k   -86.08; -gamma  1e7   0.0
+2 H+ + 2 e- = H2
+        log_k   -3.15;  -gamma  1e7   0.0
+H+ = H+
+        log_k   0.0;    -gamma  1e7   0.0
+e- = e-
+        log_k   0.0;    -gamma  1e7   0.0
+H2O = H2O
+        log_k   0.0;    -gamma  1e7   0.0
+CO2 = CO2
+        log_k   0.0;    -gamma  1e7   0.0
+CO2 + H2O = HCO3- + H+
+        log_k   -6.35;  -gamma  1e7   0.0
+CO2 + H2O = CO3-2 + 2H+
+        log_k   -16.68; -gamma  1e7   0.0
+H2O = OH- +  H+
+        log_k   -14.0;  -gamma  1e7   0.0
+[A] = [A]
+        log_k   0.0;    -gamma  1e7   0.0
+[B] = [B]
+        log_k   0.0;    -gamma  1e7   0.0
+[C] = [C]
+        log_k   0.0;    -gamma  1e7   0.0
+[E] = [E]
+        log_k   0.0;    -gamma  1e7   0.0
+[C] + [E] = [C][E]
+        log_k   5.0;    -gamma  1e7   0.0
+RATES
+[AB]_rxn
+	-start
+10 rem Factor of 1000 on line 30 is mol/L -> mg/L IF mol mass is 1
+20 rt = PARM(1)*(MOL("[A]")^PARM(2))*(MOL("[B]")^PARM(3))
+30 IF (PARM(2)>1) THEN sf1=(1000^(PARM(2)-1)) ELSE sf1=1
+40 IF (PARM(3)>1) THEN sf2=(1000^(PARM(3)-1)) ELSE sf2=1
+50 sf3=PARM(2)
+60 moles = -(rt/sf3)*TIME*1000*sf1*sf2
+70 SAVE moles
+	-end
+[AD]_rxn
+	-start
+10 rt = PARM(1)*MOL("[C]")
+20 moles = -rt*TIME
+40 SAVE moles
+	-end
+[E]_decay
+	-start
+10 rt= PARM(1)*MOL("[E]")
+20 moles = -rt*TIME*1000
+30 SAVE moles
+	-end
+END
